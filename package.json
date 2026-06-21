@@ -1,0 +1,17 @@
+{
+  "name": "hq-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/index.js",
+    "deploy": "node src/scripts/deploy.js"
+  },
+  "dependencies": {
+    "@discordjs/core": "^2.0.0",
+    "@discordjs/rest": "^2.4.0",
+    "@discordjs/ws": "^2.0.0",
+    "discord-api-types": "^0.38.49",
+    "dotenv": "^16.4.5"
+  }
+}
