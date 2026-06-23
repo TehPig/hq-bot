@@ -138,10 +138,18 @@ function cleanCrosspostCache(bot) {
 
 export async function startFeedChecker(bot) {
   loadCache(bot);
+  console.log('[Feed] Monitoring:', JSON.stringify({
+    twitter: bot.ids.twitter,
+    youtube: bot.ids.youtube,
+    twitch: bot.ids.twitch,
+    bluesky: bot.ids.bluesky,
+    threads: bot.ids.threads,
+  }));
   const channelId = bot.ids.channels.feeds;
 
   const checkTweet = async (handle) => {
     try {
+      console.log(`[Feed] Checking Twitter for ${handle}...`);
       const res = await fetch(TWITTER_RSS(handle));
       const xml = await res.text();
       const idMatch = xml.match(/<guid[^>]*>([^<]+)<\/guid>/);
@@ -239,6 +247,7 @@ export async function startFeedChecker(bot) {
 
   const checkBluesky = async (handle) => {
     try {
+      console.log(`[Feed] Checking Bluesky for ${handle}...`);
       const res = await fetch(BLUESKY_API(handle));
       const data = await res.json();
       const post = data?.feed?.[0]?.post;
@@ -272,6 +281,7 @@ export async function startFeedChecker(bot) {
 
   const checkThreads = async (handle) => {
     try {
+      console.log(`[Feed] Checking Threads for ${handle}...`);
       const res = await fetch(THREADS_RSS(handle));
       const xml = await res.text();
       const idMatch = xml.match(/<guid[^>]*>([^<]+)<\/guid>/);
