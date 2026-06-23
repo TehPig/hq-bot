@@ -16,7 +16,7 @@ const BLUESKY_API = (handle) =>
   `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=1`;
 // Threads uses threads-api npm package (GraphQL via Barcelona API)
 
-const CROSSPOST_TIMEOUT = 30 * 60 * 1000;
+const CROSSPOST_TIMEOUT = 24 * 60 * 60 * 1000;
 const CACHE_FILE = resolve(__dirname, "../../feed-cache.json");
 
 function loadCache(bot) {
@@ -101,11 +101,10 @@ async function handleSocialPost(platform, handle, text, url, bot, channelId) {
   if (!key) return;
 
   const existing = bot.lastPosts.crossposts.get(key);
-  const isRecent =
-    existing && Date.now() - existing.timestamp < CROSSPOST_TIMEOUT;
 
-  if (existing && isRecent) {
-    existing.links.push({ platform, url });
+  if (existing) {
+    const alreadyLinked = existing.links.some((l) => l.url === url);
+    if (!alreadyLinked) existing.links.push({ platform, url });
     existing.timestamp = Date.now();
     const content = buildCrosspostContent(handle, text, existing.links);
     try {
