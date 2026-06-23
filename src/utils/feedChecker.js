@@ -75,7 +75,7 @@ async function handleSocialPost(platform, handle, text, url, bot, channelId) {
   }
 }
 
-function cleanCrosspostCache() {
+function cleanCrosspostCache(bot) {
   const cutoff = Date.now() - CROSSPOST_TIMEOUT;
   for (const [key, entry] of bot.lastPosts.crossposts) {
     if (entry.timestamp < cutoff) bot.lastPosts.crossposts.delete(key);
@@ -222,6 +222,6 @@ export async function startFeedChecker(bot) {
     for (const handle of bot.ids.twitch ?? []) await checkStream(handle);
     for (const handle of bot.ids.bluesky ?? []) await checkBluesky(handle);
     for (const handle of bot.ids.threads ?? []) await checkThreads(handle);
-    cleanCrosspostCache();
+    cleanCrosspostCache(bot);
   }, 5 * 60 * 1000);
 }
