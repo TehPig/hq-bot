@@ -12,6 +12,7 @@
     "@discordjs/rest": "^2.4.0",
     "@discordjs/ws": "^2.0.0",
     "discord-api-types": "^0.38.49",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "threads-api": "^1.6.3"
   }
 }

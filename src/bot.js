@@ -21,9 +21,12 @@ export default {
       feeds: '1518198192741810197',
     },
     twitter: ['TechPigYT'],
-    youtube: ['@TechPigYT', '@TechPigExtra'],
+    youtube: [
+      { handle: '@TechPigYT', channelId: 'UCZSeLRViO3nVeZUon2eOscw' },
+      { handle: '@TechPigExtra', channelId: 'UC5ir67ugxcQH2_taceOE3Fg' },
+    ],
     twitch: ['TechPigYT', 'TechPigLIVE'],
-    bluesky: ['techpig.bsky.social'],
-    threads: ['techpigyt'],
+    bluesky: ['techpig.tehcraft.xyz'],
+    threads: ['tehpigyt'],
   },
 };

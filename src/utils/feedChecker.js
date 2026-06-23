@@ -1,17 +1,20 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
+import threadsApi from "threads-api";
+
+const { ThreadsAPI } = threadsApi;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const TWITTER_RSS = (handle) => `https://rsshub.app/twitter/user/${handle}`;
-const YOUTUBE_RSS = (handle) =>
-  `https://www.youtube.com/feeds/videos.xml?handle=${handle}`;
+const TWITTER_RSS = (handle) => `https://fxtwitter.com/${handle}/feed.xml`;
+const YOUTUBE_RSS = (channelId) =>
+  `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 const TWITCH_OAUTH = "https://id.twitch.tv/oauth2/token";
 const TWITCH_API = "https://api.twitch.tv/helix/streams";
 const BLUESKY_API = (handle) =>
   `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=1`;
-const THREADS_RSS = (handle) => `https://rsshub.app/threads/user/${handle}`;
+// Threads uses threads-api npm package (GraphQL via Barcelona API)
 
 const CROSSPOST_TIMEOUT = 30 * 60 * 1000;
 const CACHE_FILE = resolve(__dirname, "../../feed-cache.json");
@@ -149,7 +152,6 @@ export async function startFeedChecker(bot) {
 
   const checkTweet = async (handle) => {
     try {
-      console.log(`[Feed] Checking Twitter for ${handle}...`);
       const res = await fetch(TWITTER_RSS(handle));
       const xml = await res.text();
       const idMatch = xml.match(/<guid[^>]*>([^<]+)<\/guid>/);
@@ -159,7 +161,7 @@ export async function startFeedChecker(bot) {
       const lastId = bot.lastPosts.tweets.get(handle);
       if (lastId && tweetId !== lastId) {
         const url = `https://twitter.com/${handle}/status/${tweetId.split("/").pop()}`;
-        const titleMatch = xml.match(/<title[^>]*>([^<]+)<\/title>/);
+        const titleMatch = xml.match(/<item>[\s\S]*?<title[^>]*>([^<]+)<\/title>/);
         const titleText = titleMatch
           ? titleMatch[1].replace(/^[^:]+:\s*/, "")
           : "";
@@ -182,17 +184,17 @@ export async function startFeedChecker(bot) {
     }
   };
 
-  const checkVideo = async (handle) => {
+  const checkVideo = async ({ handle, channelId }) => {
     try {
-      const res = await fetch(YOUTUBE_RSS(handle));
+      const res = await fetch(YOUTUBE_RSS(channelId));
       const xml = await res.text();
       const idMatch = xml.match(/<yt:videoId[^>]*>([^<]+)<\/yt:videoId>/);
       if (!idMatch) return;
 
       const videoId = idMatch[1];
-      const titleMatch = xml.match(/<title[^>]*>([^<]+)<\/title>/);
+      const titleMatch = xml.match(/<entry>[\s\S]*?<title[^>]*>([^<]+)<\/title>/);
       const title = titleMatch
-        ? titleMatch[1].replace(/^[^:]+:\s*/, "")
+        ? titleMatch[1]
         : "New video";
       const lastId = bot.lastPosts.videos.get(handle);
 
@@ -247,11 +249,11 @@ export async function startFeedChecker(bot) {
 
   const checkBluesky = async (handle) => {
     try {
-      console.log(`[Feed] Checking Bluesky for ${handle}...`);
       const res = await fetch(BLUESKY_API(handle));
-      const data = await res.json();
-      const post = data?.feed?.[0]?.post;
-      if (!post) return;
+      const bskyData = await res.json();
+      if (bskyData.error) { console.log(`[Feed] Bluesky for ${handle}: API error - ${bskyData.error}`); return; }
+      const post = bskyData?.feed?.[0]?.post;
+      if (!post) { console.log(`[Feed] Bluesky for ${handle}: no post in feed`); return; }
 
       const uri = post.uri;
       const rkey = uri.split("/").pop();
@@ -279,32 +281,40 @@ export async function startFeedChecker(bot) {
     }
   };
 
+  const threadsApiClient = new ThreadsAPI({ verbose: false });
+  const threadsUserIdCache = {};
+  const getThreadsUserId = async (handle) => {
+    if (threadsUserIdCache[handle]) return threadsUserIdCache[handle];
+    const uid = await threadsApiClient.getUserIDfromUsername(handle);
+    if (uid) threadsUserIdCache[handle] = uid;
+    return uid;
+  };
+
   const checkThreads = async (handle) => {
     try {
-      console.log(`[Feed] Checking Threads for ${handle}...`);
-      const res = await fetch(THREADS_RSS(handle));
-      const xml = await res.text();
-      const idMatch = xml.match(/<guid[^>]*>([^<]+)<\/guid>/);
-      if (!idMatch) return;
+      const userId = await getThreadsUserId(handle);
+      if (!userId) {
+        console.error(`[Feed] Threads: could not get userID for ${handle}`);
+        return;
+      }
 
-      const postId = idMatch[1];
+      const posts = await threadsApiClient.getUserProfileThreads(handle, userId);
+      if (!posts || posts.length === 0) return;
+
+      const latest = posts[0];
+      const threadItem = latest.thread_items?.[0];
+      if (!threadItem) return;
+
+      const post = threadItem.post;
+      const postId = post.pk;
+      const text = post.caption?.text || "";
+      const code = post.code;
+      const url = `https://www.threads.net/t/${code}`;
+
       const lastId = bot.lastPosts.threads.get(handle);
-
       if (lastId && postId !== lastId) {
-        const titleMatch = xml.match(/<title[^>]*>([^<]+)<\/title>/);
-        const titleText = titleMatch
-          ? titleMatch[1].replace(/^[^:]+:\s*/, "")
-          : "";
-        const url = `https://www.threads.net/@${handle}/post/${postId.split("/").pop()}`;
         bot.lastPosts.threads.set(handle, postId);
-        await handleSocialPost(
-          "Threads",
-          handle,
-          titleText,
-          url,
-          bot,
-          channelId,
-        );
+        await handleSocialPost("Threads", handle, text, url, bot, channelId);
         saveCache(bot);
       } else if (!lastId) {
         bot.lastPosts.threads.set(handle, postId);
@@ -317,7 +327,7 @@ export async function startFeedChecker(bot) {
 
   setTimeout(async () => {
     for (const handle of bot.ids.twitter ?? []) await checkTweet(handle);
-    for (const handle of bot.ids.youtube ?? []) await checkVideo(handle);
+    for (const yt of bot.ids.youtube ?? []) await checkVideo(yt);
     for (const handle of bot.ids.twitch ?? []) await checkStream(handle);
     for (const handle of bot.ids.bluesky ?? []) await checkBluesky(handle);
     for (const handle of bot.ids.threads ?? []) await checkThreads(handle);
@@ -327,7 +337,7 @@ export async function startFeedChecker(bot) {
   setInterval(
     async () => {
       for (const handle of bot.ids.twitter ?? []) await checkTweet(handle);
-      for (const handle of bot.ids.youtube ?? []) await checkVideo(handle);
+      for (const yt of bot.ids.youtube ?? []) await checkVideo(yt);
       for (const handle of bot.ids.twitch ?? []) await checkStream(handle);
       for (const handle of bot.ids.bluesky ?? []) await checkBluesky(handle);
       for (const handle of bot.ids.threads ?? []) await checkThreads(handle);
