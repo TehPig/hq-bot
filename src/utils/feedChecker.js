@@ -191,7 +191,7 @@ export async function startFeedChecker(bot) {
       if (lastId && videoId !== lastId) {
         bot.lastPosts.videos.set(handle, videoId);
         await bot.api.channels.createMessage(channelId, {
-          content: `**${handle}** uploaded a new video!\n\n>>> **${title}**\nhttps://youtu.be/${videoId}`,
+          content: `🎥 | **${handle}** uploaded a new video!\n\n>>> **${title}**\nhttps://youtu.be/${videoId}`,
         });
         saveCache(bot);
       } else if (!lastId) {
@@ -227,7 +227,7 @@ export async function startFeedChecker(bot) {
       if (isLive && !wasLive) {
         const stream = data[0];
         await bot.api.channels.createMessage(channelId, {
-          content: `**${handle}** is now live on Twitch!\n\n>>> **${stream.title}**\nhttps://twitch.tv/${handle}`,
+          content: `🔴 | **${handle}** is now live on Twitch!\n\n>>> **${stream.title}**\nhttps://twitch.tv/${handle}`,
         });
       }
       bot.lastPosts.streams.set(handle, !!isLive);
