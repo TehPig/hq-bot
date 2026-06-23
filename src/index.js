@@ -25,6 +25,4 @@ setupBot(bot);
 await setupCommands(bot);
 await setupEvents(bot);
 
-bot.once(GatewayDispatchEvents.Ready, () => console.log('HQ Bot is live!'));
-
 gateway.connect();
