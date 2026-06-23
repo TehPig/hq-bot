@@ -13,7 +13,7 @@ export default {
 
     const embed_old = new Embed()
       .setDescription(
-        `> # 🌵 Old / Abandoned Projects
+        `> ## 🌵 Old / Abandoned Projects
 [T_Bot's Team Advertising Server](https://discord.gg/CPvCXcsj89) - An old server where people could advertise their Discord servers and social media.
 [|A_Net | teN_A|](https://discord.gg/TS6pbquh63) - A casual community server created for fun.
 [Some Linking Bot](https://discord.gg/Z3rWZVERCC) - A support server for the Discord bot "Some Linking Bot". The bot allows the user to link their accounts from popular games and check out statistics without having to rely on third party solutions.
@@ -27,13 +27,13 @@ export default {
 
     const embed_current = new Embed()
       .setDescription(
-        `> # 🏅 Currently Active / Maintained Communities
+        `> ## 🏅 Currently Active Communities
 ### [T_Bot Team](<https://discord.gg/nH8EqjKkJv>) - The home of my Bots. Been around since **2018**.
 ### [TehCraft SMP](<https://discord.gg/5DHFBBcD3F>) - My Minecraft Server which I maintain to this day! Started back in **2020**.`)
       .setColor("#9B59B6");
 
     const embed_github = new Embed()
-    .setDescription(`> # ⚙️ Currently Active / Maintained Projects
+    .setDescription(`> ## ⚙️ Currently Active / Maintained Projects
       
 [T_Music_Bot RPC](https://github.com/T-Bot-Team/t-music-bot-rpc) - Share your current tracks with friends on Discord and your viewers on stream—all with one tool.
 [MindLeap](https://github.com/TehPig/MindLeap) - A simple deck-based flashcard app inspired by Anki.
