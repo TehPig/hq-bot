@@ -1,16 +1,16 @@
 const statuses = [
-  { name: '👀 lurking in the shadows', type: 3 },
-  { name: '☕ sipping virtual coffee', type: 3 },
-  { name: '🤖 ready for commands', type: 0 },
-  { name: '🎲 waiting for your next move', type: 0 },
-  { name: '💤 taking a power nap', type: 3 },
-  { name: '🔮 predicting the future', type: 3 },
-  { name: '🎯 vibing in the HQ', type: 0 },
-  { name: '🗿 pondering existence', type: 2 },
-  { name: '💀 gatekeeping the server', type: 3 },
-  { name: '🎪 running a circus', type: 0 },
-  { name: '🧠 thinking about life', type: 2 },
-  { name: '🌀 causing chaos', type: 0 },
+  { name: 'Custom Status', type: 4, state: '👀 lurking in the shadows' },
+  { name: 'Custom Status', type: 4, state: '☕ sipping virtual coffee' },
+  { name: 'Custom Status', type: 4, state: '🤖 ready for commands' },
+  { name: 'Custom Status', type: 4, state: '🎲 waiting for your next move' },
+  { name: 'Custom Status', type: 4, state: '💤 taking a power nap' },
+  { name: 'Custom Status', type: 4, state: '🔮 predicting the future' },
+  { name: 'Custom Status', type: 4, state: '🎯 vibing in the HQ' },
+  { name: 'Custom Status', type: 4, state: '🗿 pondering existence' },
+  { name: 'Custom Status', type: 4, state: '💀 gatekeeping the server' },
+  { name: 'Custom Status', type: 4, state: '🎪 running a circus' },
+  { name: 'Custom Status', type: 4, state: '🧠 thinking about life' },
+  { name: 'Custom Status', type: 4, state: '🌀 causing chaos' },
 ];
 
 export default {
