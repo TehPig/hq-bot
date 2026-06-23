@@ -4,8 +4,8 @@ export default {
   name: "projects",
   description:
     "Posts an embed with all of the past Discord projects I've worked on.",
-  run: async (btoa, interaction, api) => {
-    if (interaction.member.id !== "")
+  run: async (bot, interaction, api) => {
+    if (interaction.member.id !== "298432708269441034")
       return api.interactions.reply({
         content: "This command is not for you!",
         flags: 64,
