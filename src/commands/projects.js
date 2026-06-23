@@ -41,6 +41,7 @@ export default {
 [SoundRPC](https://github.com/T-Bot-Team/SoundRPC) - A discord-rpc based package that exclusively focuses on voice-related features.
 
 *Only projects with active public links are shown. More are under active development.*`)
+      .setColor("#9B59B6");
 
     api.interactions.reply(interaction.id, interaction.token, {
       content: "📋 Projects posted!",
