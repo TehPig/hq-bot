@@ -10,7 +10,9 @@ export default {
         flags: 64,
       });
 
-    const embed = new Embed().setTitle("🌐 Social Links").setColor("#9B59B6")
+    const embed = new Embed()
+      .setTitle("🌐 Social Links")
+      .setColor("#9B59B6")
       .setDescription(`**GitHub**: https://github.com/TehPig
 **Reddit**: https://reddit.com/user/TechPigYT
 **Twitter / X**: https://twitter.com/TechPigYT
