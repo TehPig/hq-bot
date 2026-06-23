@@ -20,18 +20,25 @@ export default {
 [OpenMC Network](https://discord.gg/HjhgNxVFBZ - Serves as a Discord server where users could add their own Minecraft servers to the network, exchange advice and connect with other players and server owners!
 [LibrertyMC](https://discord.gg/RhbWnqASjS) - An old vanilla Minecraft server that served as a community for a short period of time.
 [RobloxianGamers](https://discord.gg/U7kpzCfnuv) - The Discord server for my Roblox group, RobloxianGamers!
-[The Coding Line](https://discord.gg/QrDj9SP33n) - An old hosting service that was changed into a community Discord server.
+[The Coding Line](https://discord.gg/QrDj9SP33n) - An old hosting service that was later transformed into a community Discord server.
 
 *There are also more projects that are not listed here.*`,)
       .setColor("#9B59B6");
 
     const embed_current = new Embed()
       .setDescription(
-        `# Currently Active / Maintained Projects
+        `# Currently Active / Maintained Communities
 ### [T_Bot Team](<https://discord.gg/nH8EqjKkJv>) - The home of my Bots. Been around since **2018**.
-### [TehCraft SMP](<https://discord.gg/5DHFBBcD3F>) - My Minecraft Server which I maintain to this day.. Started back in **2020**.`,
-      )
+### [TehCraft SMP](<https://discord.gg/5DHFBBcD3F>) - My Minecraft Server which I maintain to this day! Started back in **2020**.`)
       .setColor("#9B59B6");
+
+    const embed_github = new Embed()
+    .setDescription(`[T_Music_Bot RPC](https://github.com/T-Bot-Team/t-music-bot-rpc) - Share your current tracks with friends on Discord and your viewers on stream—all with one tool.
+[MindLeap](https://github.com/TehPig/MindLeap) - A simple deck-based flashcard app inspired by Anki.
+[euphoria-logger](https://github.com/TehPig/euphoria-logger) - A feature-packed console logger for Javascript.
+[SoundRPC](https://github.com/T-Bot-Team/SoundRPC) - A discord-rpc based package that exclusively focuses on voice-related features.
+
+*Only projects with active public links are shown, make are beign actively worked on daily.*`)
 
     api.interactions.reply(interaction.id, interaction.token, {
       content: "📋 Projects posted!",
