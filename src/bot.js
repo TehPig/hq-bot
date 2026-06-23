@@ -1,6 +1,6 @@
 export default {
   uptime: Date.now(),
-  version: '1.0.0',
+  version: '1.1.0',
   commands: new Map(),
   cache: {
     guildData: new Map(),
@@ -10,6 +10,9 @@ export default {
     tweets: new Map(),
     videos: new Map(),
     streams: new Map(),
+    bluesky: new Map(),
+    threads: new Map(),
+    crossposts: new Map(),
   },
   ids: {
     guildId: '1518196109309120614',
@@ -19,6 +22,8 @@ export default {
     },
     twitter: ['TechPigYT'],
     youtube: ['@TechPigYT', '@TechPigExtra'],
-    twitch: ['TechPigYT', 'TechPigExtra'],
+    twitch: ['TechPigYT', 'TechPigLIVE'],
+    bluesky: ['techpig.bsky.social'],
+    threads: ['techpigyt'],
   },
 };
