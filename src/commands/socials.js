@@ -4,6 +4,12 @@ export default {
   name: "socials",
   description: "Show all of my social media links.",
   run: async (bot, interaction, api) => {
+    if (interaction.member.user.id !== "298432708269441034")
+      return api.interactions.reply(interaction.id, interaction.token, {
+        content: "This command is not for you!",
+        flags: 64,
+      });
+
     const embed = new Embed().setTitle("🌐 Social Links").setColor("#9B59B6")
       .setDescription(`**GitHub**: https://github.com/TehPig
 **Reddit**: https://reddit.com/user/TechPigYT

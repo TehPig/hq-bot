@@ -5,7 +5,7 @@ export default {
   description:
     "Posts an embed with all of the past Discord projects I've worked on.",
   run: async (bot, interaction, api) => {
-    if (interaction.member.id !== "298432708269441034")
+    if (interaction.member.user.id !== "298432708269441034")
       return api.interactions.reply(interaction.id, interaction.token, {
         content: "This command is not for you!",
         flags: 64,
