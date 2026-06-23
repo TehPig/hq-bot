@@ -13,17 +13,19 @@ let twitchTokenExpiry = 0;
 async function getTwitchToken() {
   const id = process.env.TWITCH_CLIENT_ID;
   const secret = process.env.TWITCH_CLIENT_SECRET;
-  if (!id || !secret) return null;
+  if (!id || !secret) { console.error('[Feed] Twitch credentials missing in .env'); return null; }
 
   if (twitchToken && Date.now() < twitchTokenExpiry) return twitchToken;
 
   try {
     const res = await fetch(`${TWITCH_OAUTH}?client_id=${id}&client_secret=${secret}&grant_type=client_credentials`, { method: 'POST' });
     const data = await res.json();
+    if (!data.access_token) { console.error('[Feed] Twitch OAuth failed:', data); return null; }
     twitchToken = data.access_token;
     twitchTokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
     return twitchToken;
-  } catch {
+  } catch (err) {
+    console.error('[Feed] Twitch OAuth error:', err.message);
     return null;
   }
 }
@@ -136,7 +138,7 @@ export async function startFeedChecker(bot) {
   const checkStream = async (handle) => {
     try {
       const token = await getTwitchToken();
-      if (!token) return;
+      if (!token) { console.error(`[Feed] Twitch check skipped for ${handle}: no token`); return; }
 
       const res = await fetch(`${TWITCH_API}?user_login=${handle}`, {
         headers: {
@@ -147,6 +149,7 @@ export async function startFeedChecker(bot) {
       const { data } = await res.json();
       const isLive = data && data.length > 0;
       const wasLive = bot.lastPosts.streams.get(handle);
+      console.log(`[Feed] Twitch check for ${handle}: isLive=${isLive}, wasLive=${wasLive}`);
 
       if (isLive && !wasLive) {
         const stream = data[0];
