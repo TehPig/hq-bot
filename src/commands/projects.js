@@ -27,13 +27,13 @@ export default {
 
     const embed_current = new Embed()
       .setDescription(
-        `> 🏅 # Currently Active / Maintained Communities
+        `> # 🏅 Currently Active / Maintained Communities
 ### [T_Bot Team](<https://discord.gg/nH8EqjKkJv>) - The home of my Bots. Been around since **2018**.
 ### [TehCraft SMP](<https://discord.gg/5DHFBBcD3F>) - My Minecraft Server which I maintain to this day! Started back in **2020**.`)
       .setColor("#9B59B6");
 
     const embed_github = new Embed()
-    .setDescription(`> ⚙️ # Currently Active / Maintained Projects
+    .setDescription(`> # ⚙️ Currently Active / Maintained Projects
       
 [T_Music_Bot RPC](https://github.com/T-Bot-Team/t-music-bot-rpc) - Share your current tracks with friends on Discord and your viewers on stream—all with one tool.
 [MindLeap](https://github.com/TehPig/MindLeap) - A simple deck-based flashcard app inspired by Anki.
