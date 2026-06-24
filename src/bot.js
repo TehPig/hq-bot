@@ -16,6 +16,9 @@ export default {
   },
   ids: {
     guildId: '1518196109309120614',
+    roles: {
+      streaming: '1519141863309836389',
+    },
     channels: {
       welcome: '1518196111456731168',
       feeds: '1518198192741810197',
