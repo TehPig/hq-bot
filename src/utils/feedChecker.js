@@ -88,12 +88,12 @@ function normalizeText(text) {
 function buildCrosspostContent(handle, text, links) {
   const isCrosspost = links.length > 1;
   const header = isCrosspost
-    ? `**Cross-post from @${handle}**`
-    : `**New post from @${handle}**`;
+    ? `## 📢 | **New Cross-post**`
+    : `## 📢 | **New post on social media**`;
   const linkStr = links.map((l) => `[${l.platform}](${l.url})`).join(" · ");
-  const displayText =
-    text.length > 500 ? text.slice(0, 497) + "..." : text || "(media)";
-  return `${header}\n\n${displayText}\n\n🔗 ${linkStr}`;
+  //const displayText =
+  //  text.length > 500 ? text.slice(0, 497) + "..." : text || "(media)";
+  return `${header}\n### 🔗 ${linkStr}`;
 }
 
 async function handleSocialPost(platform, handle, text, url, bot, channelId) {
